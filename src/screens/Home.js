@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import './App.css';
-import Row from './components/Row'; 
+import './Home.css';
+import { useUser } from '../context/useUser'
+import Row from '../components/Row'; 
 import axios from 'axios'; // supposed to be in index.js on client side,
                             // but it doesn't have useState like in the example pic and this does
 
 const url = 'http://localhost:3001'
+// const url = process.env.REACT_APP_API_URL;
 
-function App() {
+function Home() { 
 
+  const { user } = useUser() // new
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
@@ -21,9 +24,11 @@ function App() {
   }, [])
 
   const addTask = () => {
+    const headers = {headers: {Authorization:user.token}}
+
     axios.post(url + '/create', {
       description: task
-    })
+    },headers)
     .then(response => {
       setTasks([...tasks,{id: response.data.id,description: task}])
       setTask('')
@@ -33,7 +38,8 @@ function App() {
   }
 
   const deleteTask = (id) => {
-    axios.delete(url + '/delete/' + id)
+    const headers = {headers: {Authorization:user.token}}
+    axios.delete(url + '/delete/' + id,headers)
     .then(response => {
       const withoutRemoved = tasks.filter((item) => item.id !== id)
       setTasks(withoutRemoved)
@@ -69,4 +75,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;

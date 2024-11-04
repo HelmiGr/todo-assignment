@@ -85,8 +85,8 @@ describe('DELETE task',() => {
 
 // gives error: relation "account" doesn't exist, maybe due to postgre?
 describe('POST register', () => {
-    const email = 'register@foo.com'
-    const password = 'register123'
+    const email = '1register@foo.com' // registration with 1 email can only be done once
+    const password = '1register123'
     it ('should register with valid email and password',async() => {
         const response = await fetch(base_url + 'user/register',{
             method: 'post',
