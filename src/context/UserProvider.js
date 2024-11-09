@@ -6,7 +6,7 @@ import axios from "axios";
 //dotenv.config()
 //these are used in other files, and the url is also undefined there?
 
-//const url = 'http://localhost:3001' // works with this
+// const url = 'http://localhost:3000' // works with this
 const url = process.env.REACT_APP_API_URL; // undefined?
 console.log("API URL:", url);
 console.log(JSON.stringify(process.env, null, 2));
@@ -21,9 +21,12 @@ export default function UserProvider({children}) {
         const json = JSON.stringify(user)
         const headers = {headers: {'Content-Type':'application/json'}}
         try {
-            await axios.post(url + '/user/register',json,headers)
+            console.log("posting")
+            await axios.post(url + '/user/register',json,headers) 
+            console.log("after posting");
             setUser({email: '',password: ''})
         } catch(error) {
+            console.log(error);
             throw error
         }
     }
@@ -34,6 +37,7 @@ export default function UserProvider({children}) {
         try {
             const response = await axios.post(url + '/user/login',json,headers) // hardcode the url here
             const token = response.data.token
+            console.log("TOKEN: " + token);
             setUser(response.data)
             sessionStorage.setItem("user",JSON.stringify(response.data))
         } catch(error) {
